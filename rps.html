@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Page Title</title>
+  <meta charset="UTF-8"/>
+</head>
+<body>
+  <script>
+      // -- Pseudocode -- \\
+      // ask player's selection (rock, paper, or scissors) - inputs case insensitive
+      // computerPlay() will choose randomly and return a result computerSelection
+      // playerSelection and computerSelection will be put into singleRound function
+      // singleRound() will compare results and compute the winner,
+      // then it will print a string depending on win or loss.
+      // game() will add one to a win counter, or loss counter,
+      // then it will repeat the singleRound() function until win or loss counter hits 3,
+      // then it will print a string reporting a winner,
+      // then it will terminate the program (or ask to replay?)
+
+      let winCounter = 0
+      let lossCounter = 0
+      
+      function playerPlay(){
+          // Player types an input
+          let playerInput = prompt("Enter your choice (Rock, paper, or scissors?): ", )
+          let playerSelection;
+
+          // Properly capitalize input
+          playerInput = parsePlayerInput(playerInput)
+
+          // Define allowed inputs for the game
+          const allowedInputs = ["Rock", "Paper", "Scissors"]
+
+          // Sets playerSelection if input is allowed, otherwise requests restart
+          if (allowedInputs.includes(playerInput)){
+            playerSelection = playerInput
+          }
+          else {
+            console.log("Please refresh and correct your spelling. You typed: "+playerInput+"!")
+          }
+          console.log("HUM: " + playerSelection)
+
+      }
+      function parsePlayerInput(input) {
+        // Properly capitalize input
+        return input.charAt(0).toUpperCase()+input.slice(1).toLowerCase()
+      }
+
+      function computerPlay(){
+          // randomly chooses rock, paper, or scissors
+          let npcRand = Math.floor(Math.random()*3);
+          let computerSelection;
+
+          if (npcRand === 0){
+            computerSelection = "Rock"
+          }
+          else if (npcRand === 1){
+            computerSelection = "Paper"
+          }
+          else {
+            computerSelection = "Scissors"
+          }
+
+          console.log("NPC: " + computerSelection)
+
+      }
+      function game(){
+        // 5 round game = 3 to 5 iterations of singleRound depending on wins/losses
+        function singleRound(playerSelection, computerSelection){
+          //return the results, not console.log()
+        }
+      }
+      playerPlay();
+      computerPlay();
+
+  </script>
+</body>
+</html>
