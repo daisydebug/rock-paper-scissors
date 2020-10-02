@@ -7,19 +7,23 @@
 <body>
   <script>
       // -- Pseudocode -- \\
-      // ++ ask player's selection (rock, paper, or scissors) - inputs case insensitive
-      // ++ computerPlay() will choose randomly and return a result computerSelection
-      // ++ playerSelection and computerSelection will be put into singleRound function
-      // ++ singleRound() will compare results and compute the winner,
-      // ++ then it will print a string depending on win or loss.
-      // game() will add one to a win counter, or loss counter,
-      // then it will repeat the singleRound() function until win or loss counter hits 3,
+      // ask player's selection (rock, paper, or scissors) - inputs case insensitive
+      // computerPlay() will choose randomly and return a result computerSelection
+      // playerSelection and computerSelection will be put into singleRound function
+      // singleRound() will compare results and compute the winner,
+      // then it will print a string depending on win or loss.
+      // then it will add one to a win counter, or loss counter,
+      // then game() will repeat the singleRound() function until win or loss counter hits 3,
       // then it will print a string reporting a winner,
       // then it will terminate the program (or ask to replay?)
-      
+
+      let winCounter = 0
+      let lossCounter = 0
+      let roundCounter = 1
+
       function playerPlay(){
           // Player types an input
-          let playerInput = prompt("Enter your choice (Rock, paper, or scissors?): ", )
+          let playerInput = prompt("Round "+roundCounter+"! Enter your choice (Rock, paper, or scissors?): ", )
           let playerSelection
 
           // Properly capitalize input
@@ -62,58 +66,48 @@
           return computerSelection
       }
 
-      function addWin(){
-        let winCounter = 0
-        winCounter++
-      }
-      function addLoss(){
-        let lossCounter = 0
-        lossCounter++
-      }
-      function addTie(){
-        let tieCounter = 0
-        tieCounter++
-      }
-
       function singleRound(playerSelection, computerSelection){
-          //return the results, not console.log()
+          //plays a single round and adds to win or loss counter
           let singleRoundResult
 
           if (playerSelection === "Rock" && computerSelection === "Scissors"){
             singleRoundResult = "You win this round!"
-            addWin()
+            winCounter++
           }
           else if (playerSelection === "Paper" && computerSelection === "Rock"){
             singleRoundResult = "You win this round!"
-            addWin()
+            winCounter++
           }
           else if (playerSelection === "Scissors" && computerSelection === "Paper"){
             singleRoundResult = "You win this round!"
-            addWin()
+            winCounter++
           }
-          else if (playerSelection.localeCompare(computerSelection) = 0){
+          else if (playerSelection.localeCompare(computerSelection) == 0){
             singleRoundResult = "It's a tie!"
-            addTie()
           }
           else {
             singleRoundResult = "You lost this round."
-            addLoss()
+            lossCounter++
           }
           console.log(singleRoundResult)
           return singleRoundResult
       }
 
       function game(){
-        // 5 round game = 3 to 5 iterations of singleRound depending on wins/losses
-        singleRound(playerPlay(), computerPlay())
-        singleRound(playerPlay(), computerPlay())
-        singleRound(playerPlay(), computerPlay())
-        singleRound(playerPlay(), computerPlay())
-        singleRound(playerPlay(), computerPlay())
+        // game repeats single rounds until win or loss count is 3 (best of 5)
+        while (winCounter < 3 && lossCounter < 3) {
+          singleRound(playerPlay(), computerPlay())
+          roundCounter++
+        }
+        if (winCounter == 3){
+          console.log("You've won the best of five! Refresh the page to play again.")
+        }
+        else{
+          console.log("You've lost the best of five :( Refresh to try again!")
+        }
       }
 
       game()
-
 
   </script>
 </body>
