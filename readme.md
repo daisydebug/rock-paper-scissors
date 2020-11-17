@@ -1,1 +1,1 @@
-This is my solution to the Project: Rock Paper Scissors
+This is my solution to the "Project: Rock Paper Scissors" (rps_pre_refactor.html) as well as my solution to its refactoring (rps.html) from the "DOM Manipulation" section.

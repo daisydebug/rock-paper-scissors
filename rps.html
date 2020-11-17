@@ -1,55 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Page Title</title>
+  <title>Let's play Rock Paper Scissors!</title>
   <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="rps.css"> 
 </head>
 <body>
-  <script>
-      // -- Pseudocode -- \\
-      // ask player's selection (rock, paper, or scissors) - inputs case insensitive
-      // computerPlay() will choose randomly and return a result computerSelection
-      // playerSelection and computerSelection will be put into singleRound function
-      // singleRound() will compare results and compute the winner,
-      // then it will print a string depending on win or loss.
-      // then it will add one to a win counter, or loss counter,
-      // then game() will repeat the singleRound() function until win or loss counter hits 3,
-      // then it will print a string reporting a winner,
-      // then it will terminate the program (or ask to replay?)
+  <hr id="hr1">
+  <h1 id="narrator">Round 1</h1>
+    <span id="narrator">First to 5 wins!</span>
+  <div class="buttonsContainer">
+    <div class="button" id="rock">
+      <button>Rock</button>
+    </div>
+    <div class="button" id="paper">
+      <button>Paper</button>
+    </div>
+    <div class="button" id="scissors">
+      <button>Scissors</button>
+    </div>
+  </div>
+  <div class="scoreContainer">
+    <h2 id="playerScore" class="score">Player Wins: 0</h2>
+    <h2 id="tieScore" class="score">Ties: 0</h2>
+    <h2 id="computerScore" class="score">Computer Wins: 0</h2>
+  </div>
+  <hr id="hr2">
+  <div class="logContainer">
+    <textarea id="textLog" readonly wrap="hard" placeholder="Click a button to begin!"></textarea>
+  </div>
 
-      let winCounter = 0
-      let lossCounter = 0
+  <script>
+/*  Function game() is ran when page initializes
+singleRound() is ran 
+  playerPlay() is ran
+    - h1 id="narrator" is updated to current round and current actionable item
+    - Player clicks on button of choice - Rock, Paper, or Scissors
+    - Button inputs player choice into function playerPlay()
+    - Player choice is logged to textLog
+  ComputerPlay() is ran
+    - Random choice is made and put into computerPlay()
+    - Computer choice is logged to textLog
+  singleRound() arguments are ran against each other to determine winner
+    - Winner is declared by logging to textLog
+      - If it's a tie, log to textLog and run singleRound() again
+    - playerWinCounter or computerWinCounter is increased by 1
+    - h2 id="score" is updated with current score, Player vs. PC
+  When playerWinCounter = 5 or computerWinCounter = 5;
+    - Log winner to textLog
+    - Prompt player
+      - Declare winner
+      - Ask to play again
+        - Yes = Reset page
+        - No = Close prompt
+
+
+Functions needed:
+updateNarrator()
+updateScore()
+winOrLossPrompt()
+*/
+      let playerWinCounter = 0
+      let computerWinCounter = 0
+      let tieCounter = 0
       let roundCounter = 1
 
-      function playerPlay(){
-          // Player types an input
-          let playerInput = prompt("Round "+roundCounter+"! Enter your choice (Rock, paper, or scissors?): ", )
-          let playerSelection
+      const textLog = document.getElementById("textLog")
+      // clears textLog on refresh
+      window.onload = function() {
+        textLog.value = '';
+        }
+      const buttons = Array.from(document.querySelectorAll('.button'))
+      buttons.forEach(button => button.addEventListener('click', singleRound))
 
-          // Properly capitalize input
-          playerInput = parsePlayerInput(playerInput)
-
-          // Define allowed inputs for the game
-          const allowedInputs = ["Rock", "Paper", "Scissors"]
-
-          // Sets playerSelection if input is allowed, otherwise requests restart
-          if (allowedInputs.includes(playerInput)){
-            playerSelection = playerInput
-          }
-          else {
-            console.log("Please refresh and correct your spelling. You typed: "+playerInput+"!")
-          }
-          console.log("You chose: " + playerSelection)
-          return playerSelection
+      function updateScore(){
+        let playerScore = document.getElementById("playerScore").firstChild;
+        let computerScore = document.getElementById("computerScore").firstChild;
+        let tieScore = document.getElementById("tieScore").firstChild;
+        let narrator = document.getElementById("narrator").firstChild;
+        playerScore.nodeValue = "Player Score: " + playerWinCounter;
+        computerScore.nodeValue = "Computer Score: " + computerWinCounter;
+        tieScore.nodeValue = "Ties: " + tieCounter;
+        narrator.nodeValue = "Round " + roundCounter;
+        return;
       }
 
-      function parsePlayerInput(input) {
-        // Properly capitalize input
-        return input.charAt(0).toUpperCase()+input.slice(1).toLowerCase()
-      }
-
-      function computerPlay(){
-          // randomly chooses rock, paper, or scissors
+      var computerPlay = function() {
           let npcRand = Math.floor(Math.random()*3);
           let computerSelection
 
@@ -62,53 +99,59 @@
           else {
             computerSelection = "Scissors"
           }
-          console.log("The Computer chose: " + computerSelection)
+          textLog.value += "The Computer chose: " + computerSelection + "\r\n"
           return computerSelection
       }
 
-      function singleRound(playerSelection, computerSelection){
-          //plays a single round and adds to win or loss counter
+      function singleRound(clickedButton){
+          const playerSelection = clickedButton.srcElement.innerText;
+          textLog.value += "You chose: " + playerSelection + "\r\n";
+          const computerSelection = computerPlay(); 
+
+          //plays a single round and RUNS updateScore()
           let singleRoundResult
 
-          if (playerSelection === "Rock" && computerSelection === "Scissors"){
-            singleRoundResult = "You win this round!"
-            winCounter++
+          if (playerWinCounter < 5 && computerWinCounter < 5){
+
+            if (playerSelection === "Rock" && computerSelection === "Scissors"){
+              singleRoundResult = "You win this round!"
+              playerWinCounter++
+              roundCounter++
+            }
+            else if (playerSelection === "Paper" && computerSelection === "Rock"){
+              singleRoundResult = "You win this round!"
+              playerWinCounter++
+              roundCounter++
+            }
+            else if (playerSelection === "Scissors" && computerSelection === "Paper"){
+              singleRoundResult = "You win this round!"
+              playerWinCounter++
+              roundCounter++
+            }
+            else if (playerSelection.localeCompare(computerSelection) == 0){
+              singleRoundResult = "It's a tie!"
+              tieCounter++
+              roundCounter++
+            }
+            else {
+              singleRoundResult = "You lost this round."
+              computerWinCounter++
+              roundCounter++
+            }
+            textLog.value += singleRoundResult + "\r\n"
+            updateScore()
           }
-          else if (playerSelection === "Paper" && computerSelection === "Rock"){
-            singleRoundResult = "You win this round!"
-            winCounter++
+          
+          if (playerWinCounter == 5){
+            alert("You won!")
+            window.location.reload()
           }
-          else if (playerSelection === "Scissors" && computerSelection === "Paper"){
-            singleRoundResult = "You win this round!"
-            winCounter++
-          }
-          else if (playerSelection.localeCompare(computerSelection) == 0){
-            singleRoundResult = "It's a tie!"
-          }
-          else {
-            singleRoundResult = "You lost this round."
-            lossCounter++
-          }
-          console.log(singleRoundResult)
-          return singleRoundResult
+          else if (computerWinCounter == 5){
+            alert("You lost!")
+            window.location.reload()
+        }
+        return singleRoundResult
       }
-
-      function game(){
-        // game repeats single rounds until win or loss count is 3 (best of 5)
-        while (winCounter < 3 && lossCounter < 3) {
-          singleRound(playerPlay(), computerPlay())
-          roundCounter++
-        }
-        if (winCounter == 3){
-          console.log("You've won the best of five! Refresh the page to play again.")
-        }
-        else{
-          console.log("You've lost the best of five :( Refresh to try again!")
-        }
-      }
-
-      game()
-
   </script>
 </body>
 </html>
